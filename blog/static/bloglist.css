@@ -1,0 +1,11 @@
+ul.blog-type {
+    list-style-type:none
+}
+div.blog h3{
+    margin-top:0.5em;
+}
+div.blog:not(:last-child) {
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #eeeeee;
+}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}我的网站{% endblock %}
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'bloglist.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8">
+                    <div class="class panel panel-default">
+                    <div class="panel-heading">
+                        {% block blog_list_title %}博客列表
+                        （一共有{{ blogs|length }}篇博客）
+                        <a href="{% url 'blog_list' %}">查看所有博客</a>
+                    </div>
+                    {% endblock %}</div>
+                    <div class="panel-body">
+                        {% for blog in paginator %}
+                            <div class="blog">
+                                <a href='{% url "blog_detail" blog.pk %}'>
+                                <h3>{{ blog.title }}</h3>
+                                 </a>
+                                <p><span class="glyphicon glyphicon-align-left" ></span>
+                                    <a href="{% url 'blog_type' blog.blog_type.pk %}">
+                                        {{ blog.blog_type }}
+                                    </a>
+                                    <span class="glyphicon glyphicon-time" ></span>
+                                    {{ blog.created_time|date:'Y-m-d'}}
+                                </p>
+                                <p>{{ blog.content|truncatechars:130 }}</p>
+                            </div>
+                        {% empty %}
+                            <div class="blog">
+                                <p>-- 暂无博客,敬请期待 --</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div>
+                          <ul class="pagination">
+                            <li>
+                                {% if paginator.has_previous %}
+                                    <a href="?page={{ paginator.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                {% else %}
+                                    <span aria-hidden="true">&laquo;</span>
+                                {% endif %}
+                            </li>
+                          {# 全部页码 #}
+                            {% for page_num in page_range %}
+                                {% if page_num == paginator.number %}
+                                     <li class="active"><span>{{ page_num }}></span></li>
+                                {% else %}
+                                    <li><span><a href="?page={{ page_num }}">{{ page_num }}></a></span></li>
+                                {% endif %}
+                            {% endfor %}
+                          {# 下一页 #}
+                            {% if paginator.has_next %}
+                                <a href="?page={{ paginator.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                </a>
+                                {% else %}
+                                    <span aria-hidden="true">&raquo;</span>
+                                {% endif %}
+
+                            </li>
+                          </ul>
+                    </div>
+                </div>
+
+            <div class="hidden-xs col-sm-4 col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">博客分类</div>
+                    <div class="panel-body">
+                        <ul class="blog-type" >
+                            {% for blog_type in blog_types %}
+                                <li><a href="{% url 'blog_type' blog_type.pk %}">{{ blog_type.type_name }}</a></li>
+                            {% empty %}
+                                <li>暂无分类</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+
